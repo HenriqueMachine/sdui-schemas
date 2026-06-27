@@ -1,0 +1,45 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HenriqueMachine/sdui-schemas/v1/component.schema.json",
+  "title": "Component",
+  "description": "A single node in the SDUI component tree",
+  "type": "object",
+  "required": ["type"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "description": "Component type identifier. Must match a key in the client ComponentRegistry",
+      "examples": [
+        "header", "balance_card", "shortcut_grid", "transaction_list",
+        "contact_selector", "amount_input", "info_row",
+        "primary_button", "secondary_button", "success_header",
+        "error_banner", "spacer", "text"
+      ]
+    },
+    "props": {
+      "type": "object",
+      "description": "Component-specific properties. Shape varies by type — validated at runtime by the renderer",
+      "additionalProperties": true
+    },
+    "children": {
+      "type": "array",
+      "items": { "$ref": "#" },
+      "description": "Nested child components (recursive)"
+    },
+    "actions": {
+      "type": "array",
+      "items": { "$ref": "action.schema.json" },
+      "description": "Actions available on this component (e.g. onTap, onSubmit)"
+    },
+    "fallback": {
+      "$ref": "#",
+      "description": "Alternative component to render when this type is unknown to the client (ADR-002 hybrid fallback)"
+    },
+    "critical": {
+      "type": "boolean",
+      "default": false,
+      "description": "When true, the server must check X-App-Version before sending this component (ADR-002)"
+    }
+  },
+  "additionalProperties": false
+}
