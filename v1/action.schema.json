@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HenriqueMachine/sdui-schemas/v1/action.schema.json",
+  "title": "Action",
+  "description": "An action that can be triggered by a component interaction",
+  "type": "object",
+  "required": ["type"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": ["NAVIGATE", "SUBMIT", "OPEN_MODAL", "CLOSE", "LOCAL_TOGGLE", "SHOW_TOAST"],
+      "description": "The action type from the closed catalog (ADR-002)"
+    },
+    "to": {
+      "type": "string",
+      "description": "Target route name for NAVIGATE. Must match a route in the client registry (ADR-003)",
+      "examples": ["home", "transfer", "transfer_confirm", "transfer_success", "extract", "login"]
+    },
+    "endpoint": {
+      "type": "string",
+      "description": "Relative endpoint path for SUBMIT actions (e.g. '/transfers')"
+    },
+    "method": {
+      "type": "string",
+      "enum": ["POST", "PUT", "PATCH", "DELETE"],
+      "description": "HTTP method for SUBMIT actions"
+    },
+    "fieldKeys": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "List of fieldKey values to collect from local state and send in the SUBMIT body"
+    },
+    "toggleKey": {
+      "type": "string",
+      "description": "Identifier for the local state entry to toggle in LOCAL_TOGGLE actions"
+    },
+    "message": {
+      "type": "string",
+      "description": "Message text to display for SHOW_TOAST actions"
+    },
+    "modalId": {
+      "type": "string",
+      "description": "Identifier for the modal to open in OPEN_MODAL actions (reserved for future use)"
+    }
+  },
+  "allOf": [
+    {
+      "if": { "properties": { "type": { "const": "NAVIGATE" } }, "required": ["type"] },
+      "then": { "required": ["to"] }
+    },
+    {
+      "if": { "properties": { "type": { "const": "SUBMIT" } }, "required": ["type"] },
+      "then": { "required": ["endpoint", "method"] }
+    },
+    {
+      "if": { "properties": { "type": { "const": "SHOW_TOAST" } }, "required": ["type"] },
+      "then": { "required": ["message"] }
+    }
+  ],
+  "additionalProperties": false
+}

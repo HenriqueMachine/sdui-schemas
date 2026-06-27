@@ -1,0 +1,33 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://github.com/HenriqueMachine/sdui-schemas/v1/screen.schema.json",
+  "title": "Screen",
+  "description": "Root payload returned by GET /screens/{name}. Describes a complete SDUI screen",
+  "type": "object",
+  "required": ["screenName", "schemaVersion", "components"],
+  "properties": {
+    "screenName": {
+      "type": "string",
+      "description": "Identifier of this screen — matches the route name in the client registry (ADR-003)",
+      "examples": ["home", "transfer", "transfer_confirm", "transfer_success", "extract"]
+    },
+    "schemaVersion": {
+      "type": "string",
+      "pattern": "^v[0-9]+$",
+      "description": "Schema major version used to build this payload (e.g. 'v1')",
+      "examples": ["v1"]
+    },
+    "backBehavior": {
+      "type": "string",
+      "description": "Declarative back-button behavior (ADR-003). Open string enum — clients ignore unknown values",
+      "examples": ["DEFAULT", "CONFIRM_DISCARD"]
+    },
+    "components": {
+      "type": "array",
+      "items": { "$ref": "component.schema.json" },
+      "minItems": 1,
+      "description": "Ordered list of top-level components to render"
+    }
+  },
+  "additionalProperties": false
+}
